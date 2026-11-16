@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="data:," />
+<title>Conteo de Reportes — Postproducción</title>
+<style>
+  :root{
+    --bg:#f4f5f3;
+    --surface:#ffffff;
+    --ink:#191c1e;
+    --ink-2:#4b5560;
+    --ink-3:#7a838d;
+    --line:#e2e5e1;
+    --accent:#0c5b4c;
+    --accent-soft:#e3f0ec;
+    --ok:#0c5b4c;
+    --ok-bg:#e3f0ec;
+    --wait:#8a4b12;
+    --wait-bg:#faf0e0;
+    --bar:#14705c;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.45;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+
+  /* ---------- Encabezado ---------- */
+  header{margin-bottom:18px}
+  h1{
+    font-size:24px;line-height:1.2;font-weight:800;letter-spacing:-.02em;
+    margin:0 0 6px;
+  }
+  .actualizado{color:var(--ink-2);font-size:14px;margin:0 0 16px}
+  .actualizado strong{color:var(--ink);font-weight:600}
+  .btn-form{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    min-height:48px;padding:12px 18px;
+    background:var(--accent);color:#fff;text-decoration:none;
+    font-size:16px;font-weight:700;border-radius:12px;
+  }
+  .btn-form:active{opacity:.88}
+  .btn-form svg{flex:none}
+
+  /* ---------- Tarjetas / secciones ---------- */
+  section{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px 16px;
+    margin-bottom:14px;
+  }
+  h2{
+    font-size:17px;font-weight:700;letter-spacing:-.01em;
+    margin:0 0 4px;
+  }
+  .sub{color:var(--ink-2);font-size:14px;margin:0 0 12px}
+
+  /* ---------- Número grande ---------- */
+  .hero{text-align:center;padding:26px 16px 22px}
+  .hero .label{
+    font-size:14px;font-weight:600;color:var(--ink-2);
+    text-transform:uppercase;letter-spacing:.06em;margin:0 0 2px;
+  }
+  .hero .big{
+    font-size:76px;line-height:1;font-weight:800;letter-spacing:-.03em;
+    font-variant-numeric:tabular-nums;margin:2px 0 6px;
+  }
+  .hero .reportes{font-size:16px;color:var(--ink-2);margin:0}
+  .hero .reportes strong{color:var(--ink);font-size:18px}
+
+  /* ---------- Hoy ---------- */
+  .hoy-grupo{margin-top:14px}
+  .hoy-grupo:first-of-type{margin-top:10px}
+  .hoy-titulo{
+    display:flex;align-items:baseline;gap:8px;
+    font-size:15px;font-weight:700;margin:0 0 8px;
+  }
+  .hoy-titulo .n{color:var(--ink-3);font-weight:600;font-size:14px}
+  .nombres{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+  .nombres li{
+    font-size:15px;font-weight:600;padding:8px 12px;border-radius:999px;line-height:1.2;
+  }
+  .nombres .si{background:var(--ok-bg);color:var(--ok)}
+  .nombres .no{background:var(--wait-bg);color:var(--wait)}
+  .vacio{color:var(--ink-3);font-size:15px;margin:0}
+
+  /* ---------- Tablas ---------- */
+  .tabla-scroll{margin:0 -4px}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  th,td{padding:9px 4px;text-align:right;font-size:14px;white-space:nowrap}
+  th{
+    color:var(--ink-3);font-weight:600;font-size:12px;
+    text-transform:uppercase;letter-spacing:.04em;
+    border-bottom:2px solid var(--line);
+  }
+  td{border-bottom:1px solid var(--line)}
+  tr:last-child td{border-bottom:none}
+  th:first-child,td:first-child{text-align:left;white-space:normal}
+  td.num{font-weight:600}
+  td.fotos{font-weight:800;font-size:15px}
+  .pos{color:var(--ink-3);font-weight:600;margin-right:6px}
+
+  /* ---------- Categorías (barras) ---------- */
+  .cat{margin-bottom:14px}
+  .cat:last-child{margin-bottom:2px}
+  .cat-fila{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:5px}
+  .cat-nombre{font-size:15px;font-weight:600}
+  .cat-num{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+  .cat-num span{color:var(--ink-3);font-weight:500;font-size:13px}
+  .barra{height:12px;background:var(--accent-soft);border-radius:6px;overflow:hidden}
+  .barra i{display:block;height:100%;background:var(--bar);border-radius:6px;min-width:4px}
+
+  /* ---------- Otros totales ---------- */
+  .totales{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px;
+  }
+  .total{
+    background:var(--bg);border-radius:10px;padding:12px 14px;
+  }
+  .total .n{font-size:26px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+  .total .t{font-size:13px;color:var(--ink-2);margin-top:2px}
+
+  /* ---------- Últimos reportes ---------- */
+  .ultimos{list-style:none;margin:8px 0 0;padding:0}
+  .ultimos li{
+    display:flex;align-items:baseline;gap:10px;
+    padding:10px 0;border-bottom:1px solid var(--line);
+  }
+  .ultimos li:last-child{border-bottom:none;padding-bottom:2px}
+  .ultimos .quien{font-weight:700;font-size:15px;flex:1;min-width:0}
+  .ultimos .cuando{color:var(--ink-2);font-size:14px;white-space:nowrap}
+  .ultimos .cuantas{font-weight:800;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .ultimos .cuantas span{color:var(--ink-3);font-weight:500;font-size:13px}
+
+  /* ---------- Estados ---------- */
+  .cargando{
+    text-align:center;color:var(--ink-2);font-size:16px;
+    padding:64px 20px;
+  }
+  .error{
+    max-width:720px;margin:0 auto;padding:80px 24px;text-align:center;
+  }
+  .error p{font-size:17px;line-height:1.5;color:var(--ink);margin:0}
+  [hidden]{display:none !important}
+
+  @media (min-width:560px){
+    .wrap{padding:28px 20px 56px}
+    h1{font-size:28px}
+    .hero .big{font-size:92px}
+    .totales{grid-template-columns:repeat(3,1fr)}
+    th,td{padding:10px 8px;font-size:15px}
+    th{font-size:12.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="cargando" id="cargando">Cargando…</div>
+
+<div class="error" id="error" hidden>
+  <p>No se pudieron cargar los datos. Intenta de nuevo más tarde.</p>
+</div>
+
+<div class="wrap" id="app" hidden>
+
+  <!-- 1. Encabezado -->
+  <header>
+    <h1>Conteo de Reportes — Postproducción</h1>
+    <p class="actualizado">Última actualización: <strong id="actualizado">—</strong></p>
+    <a class="btn-form" href="https://juseff002.github.io/reporte-diario/">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      Ir al formulario de reportes
+    </a>
+  </header>
+
+  <!-- 2. Total de fotos -->
+  <section class="hero">
+    <p class="label">Total de fotos editadas</p>
+    <p class="big" id="total-fotos">—</p>
+    <p class="reportes"><strong id="total-reportes">—</strong> reportes recibidos</p>
+  </section>
+
+  <!-- 3. Hoy -->
+  <section>
+    <h2>Hoy</h2>
+    <p class="sub" id="hoy-fecha">—</p>
+
+    <div class="hoy-grupo">
+      <p class="hoy-titulo">Ya reportaron <span class="n" id="n-reportaron"></span></p>
+      <ul class="nombres" id="lista-reportaron"></ul>
+      <p class="vacio" id="vacio-reportaron" hidden>Nadie ha reportado todavía.</p>
+    </div>
+
+    <div class="hoy-grupo">
+      <p class="hoy-titulo">Faltan por reportar <span class="n" id="n-faltan"></span></p>
+      <ul class="nombres" id="lista-faltan"></ul>
+      <p class="vacio" id="vacio-faltan" hidden>Ya reportaron todos.</p>
+    </div>
+  </section>
+
+  <!-- 4. Ranking por persona -->
+  <section>
+    <h2>Ranking por persona</h2>
+    <div class="tabla-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Persona</th><th>Fotos</th><th>Rep.</th><th>Ses.</th><th>Vid.</th><th>Álb.</th><th>Mont.</th>
+          </tr>
+        </thead>
+        <tbody id="ranking"></tbody>
+      </table>
+    </div>
+    <p class="vacio" id="vacio-ranking" hidden>Todavía no hay reportes.</p>
+  </section>
+
+  <!-- 5. Fotos por categoría -->
+  <section>
+    <h2>Fotos por categoría</h2>
+    <div id="categorias" style="margin-top:12px"></div>
+    <p class="vacio" id="vacio-categorias" hidden>Todavía no hay fotos por categoría.</p>
+  </section>
+
+  <!-- 6. Por día -->
+  <section>
+    <h2>Por día</h2>
+    <table>
+      <thead><tr><th>Fecha</th><th>Fotos</th></tr></thead>
+      <tbody id="por-dia"></tbody>
+    </table>
+    <p class="vacio" id="vacio-dias" hidden>Todavía no hay días con reportes.</p>
+  </section>
+
+  <!-- 7. Otros totales -->
+  <section>
+    <h2>Otros totales</h2>
+    <div class="totales">
+      <div class="total"><div class="n" id="t-ses-ext">—</div><div class="t">Sesiones en exterior</div></div>
+      <div class="total"><div class="n" id="t-ses-est">—</div><div class="t">Sesiones de estudio</div></div>
+      <div class="total"><div class="n" id="t-vid-ext">—</div><div class="t">Videos en exterior</div></div>
+      <div class="total"><div class="n" id="t-vid-est">—</div><div class="t">Videos en estudio</div></div>
+      <div class="total"><div class="n" id="t-albumes">—</div><div class="t">Álbumes</div></div>
+      <div class="total"><div class="n" id="t-montajes">—</div><div class="t">Montajes</div></div>
+    </div>
+  </section>
+
+  <!-- 8. Últimos reportes -->
+  <section>
+    <h2>Últimos reportes</h2>
+    <ul class="ultimos" id="ultimos"></ul>
+    <p class="vacio" id="vacio-ultimos" hidden>Todavía no hay reportes.</p>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  var MESES_C = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  var DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+
+  function esc(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function num(n){
+    var v = Number(n);
+    if (!isFinite(v)) v = 0;
+    return v.toLocaleString("es-DO");
+  }
+  function $(id){ return document.getElementById(id); }
+
+  /* "2026-11-13" -> objeto con partes, sin problemas de zona horaria */
+  function partesFecha(fecha){
+    var p = String(fecha || "").split("-");
+    if (p.length !== 3) return null;
+    return { y:+p[0], m:+p[1], d:+p[2] };
+  }
+  function fechaCorta(fecha){
+    var f = partesFecha(fecha);
+    if (!f) return esc(fecha);
+    return f.d + " " + MESES_C[f.m-1] + " " + f.y;
+  }
+  function fechaLarga(fecha){
+    var f = partesFecha(fecha);
+    if (!f) return esc(fecha);
+    var dt = new Date(f.y, f.m-1, f.d);
+    return DIAS[dt.getDay()] + ", " + f.d + " de " + MESES[f.m-1] + " de " + f.y;
+  }
+  function fechaHora(iso){
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return esc(iso);
+    try {
+      return new Intl.DateTimeFormat("es-DO", {
+        timeZone:"America/Santo_Domingo",
+        day:"numeric", month:"long", year:"numeric",
+        hour:"numeric", minute:"2-digit", hour12:true
+      }).format(d);
+    } catch(e) {
+      return d.toLocaleString("es-DO");
+    }
+  }
+
+  function mostrarError(){
+    $("cargando").hidden = true;
+    $("app").hidden = true;
+    $("error").hidden = false;
+  }
+
+  function dibujar(d){
+    /* 1. Encabezado */
+    $("actualizado").textContent = fechaHora(d.actualizado);
+
+    /* 2. Total de fotos */
+    $("total-fotos").textContent = num(d.total_fotos);
+    $("total-reportes").textContent = num(d.total_reportes);
+
+    /* 3. Hoy */
+    var hoy = d.hoy || {};
+    $("hoy-fecha").textContent = fechaLarga(hoy.fecha);
+    var reportaron = Array.isArray(hoy.reportaron) ? hoy.reportaron : [];
+    var faltan = Array.isArray(hoy.faltan) ? hoy.faltan : [];
+    $("n-reportaron").textContent = reportaron.length ? "(" + reportaron.length + ")" : "";
+    $("n-faltan").textContent = faltan.length ? "(" + faltan.length + ")" : "";
+    $("lista-reportaron").innerHTML = reportaron.map(function(n){
+      return '<li class="si">' + esc(n) + "</li>";
+    }).join("");
+    $("lista-faltan").innerHTML = faltan.map(function(n){
+      return '<li class="no">' + esc(n) + "</li>";
+    }).join("");
+    $("vacio-reportaron").hidden = reportaron.length > 0;
+    $("vacio-faltan").hidden = faltan.length > 0;
+
+    /* 4. Ranking por persona (mayor a menor por fotos) */
+    var personas = (Array.isArray(d.por_persona) ? d.por_persona.slice() : [])
+      .sort(function(a,b){ return (Number(b.fotos)||0) - (Number(a.fotos)||0); });
+    $("ranking").innerHTML = personas.map(function(p, i){
+      return "<tr>" +
+        '<td><span class="pos">' + (i+1) + ".</span>" + esc(p.nombre) + "</td>" +
+        '<td class="fotos">' + num(p.fotos) + "</td>" +
+        '<td class="num">' + num(p.reportes) + "</td>" +
+        '<td class="num">' + num(p.sesiones) + "</td>" +
+        '<td class="num">' + num(p.videos) + "</td>" +
+        '<td class="num">' + num(p.albumes) + "</td>" +
+        '<td class="num">' + num(p.montajes) + "</td>" +
+      "</tr>";
+    }).join("");
+    $("vacio-ranking").hidden = personas.length > 0;
+
+    /* 5. Fotos por categoría (barras) */
+    var cats = (Array.isArray(d.por_categoria) ? d.por_categoria.slice() : [])
+      .sort(function(a,b){ return (Number(b.fotos)||0) - (Number(a.fotos)||0); });
+    var maxCat = cats.reduce(function(m,c){ return Math.max(m, Number(c.fotos)||0); }, 0);
+    $("categorias").innerHTML = cats.map(function(c){
+      var v = Number(c.fotos)||0;
+      var pct = maxCat > 0 ? Math.round(v / maxCat * 100) : 0;
+      return '<div class="cat">' +
+        '<div class="cat-fila"><span class="cat-nombre">' + esc(c.categoria) + "</span>" +
+        '<span class="cat-num">' + num(v) + " <span>fotos</span></span></div>" +
+        '<div class="barra"><i style="width:' + pct + '%"></i></div>' +
+      "</div>";
+    }).join("");
+    $("vacio-categorias").hidden = cats.length > 0;
+
+    /* 6. Por día (más reciente primero) */
+    var dias = (Array.isArray(d.por_dia) ? d.por_dia.slice() : [])
+      .sort(function(a,b){ return String(b.fecha).localeCompare(String(a.fecha)); });
+    $("por-dia").innerHTML = dias.map(function(x){
+      return "<tr><td>" + fechaCorta(x.fecha) + '</td><td class="fotos">' + num(x.fotos) + "</td></tr>";
+    }).join("");
+    $("vacio-dias").hidden = dias.length > 0;
+
+    /* 7. Otros totales */
+    var t = d.totales || {};
+    $("t-ses-ext").textContent = num(t.sesiones_exterior);
+    $("t-ses-est").textContent = num(t.sesiones_estudio);
+    $("t-vid-ext").textContent = num(t.videos_exterior);
+    $("t-vid-est").textContent = num(t.videos_estudio);
+    $("t-albumes").textContent = num(t.albumes);
+    $("t-montajes").textContent = num(t.montajes);
+
+    /* 8. Últimos reportes */
+    var ult = Array.isArray(d.ultimos_reportes) ? d.ultimos_reportes : [];
+    $("ultimos").innerHTML = ult.map(function(r){
+      return "<li>" +
+        '<span class="quien">' + esc(r.nombre) + "</span>" +
+        '<span class="cuando">' + fechaCorta(r.fecha) + "</span>" +
+        '<span class="cuantas">' + num(r.fotos) + " <span>fotos</span></span>" +
+      "</li>";
+    }).join("");
+    $("vacio-ultimos").hidden = ult.length > 0;
+
+    $("cargando").hidden = true;
+    $("error").hidden = true;
+    $("app").hidden = false;
+  }
+
+  fetch("datos.json")
+    .then(function(r){
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(dibujar)
+    .catch(mostrarError);
+})();
+</script>
+</body>
+</html>
