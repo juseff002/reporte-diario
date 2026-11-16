@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Reporte Diario — Postproducción</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f4f3ef;
+        --surface: #ffffff;
+        --surface-2: #eceae4;
+        --ink: #1c1a17;
+        --muted: #6f6a61;
+        --line: #ddd9d0;
+        --accent: #b4441c;
+        --accent-ink: #ffffff;
+        --accent-soft: #fbe9e0;
+        --ok-bg: #e3f2e4;
+        --ok-ink: #1e6b2a;
+        --ok-line: #a9d3ae;
+        --total-bg: #1c1a17;
+        --total-ink: #ffffff;
+        --radius: 12px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #14120f;
+          --surface: #201d19;
+          --surface-2: #2a2721;
+          --ink: #f2efe8;
+          --muted: #a49c8f;
+          --line: #3a362e;
+          --accent: #e07a4a;
+          --accent-ink: #1c120a;
+          --accent-soft: #3a2417;
+          --ok-bg: #1d3320;
+          --ok-ink: #9fd8a6;
+          --ok-line: #3c6b42;
+          --total-bg: #f2efe8;
+          --total-ink: #1c1a17;
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+        line-height: 1.45;
+      }
+      .wrap {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 20px 16px 48px;
+      }
+      header { margin-bottom: 18px; }
+      h1 {
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+      }
+      .sub { color: var(--muted); font-size: 15px; margin: 0; }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 16px;
+        margin-bottom: 14px;
+      }
+      .card h2 {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin: 0 0 12px;
+      }
+      label.field { display: block; }
+      label.field > span {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .req { color: var(--accent); }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .grid-counts {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      @media (max-width: 560px) {
+        .grid-2 { grid-template-columns: 1fr; }
+        .grid-counts { grid-template-columns: repeat(2, 1fr); }
+      }
+      input, select, textarea {
+        width: 100%;
+        font: inherit;
+        font-size: 16px;
+        color: var(--ink);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 9px 10px;
+        min-height: 44px;
+        appearance: none;
+      }
+      select {
+        background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+        background-position: calc(100% - 16px) 55%, calc(100% - 11px) 55%;
+        background-size: 5px 5px;
+        background-repeat: no-repeat;
+        padding-right: 28px;
+      }
+      input:focus, select:focus, textarea:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+        border-color: var(--accent);
+      }
+      input[type="number"] { text-align: center; }
+      textarea { min-height: 76px; resize: vertical; text-align: left; }
+      .counts label.field > span { font-size: 13px; font-weight: 500; color: var(--muted); }
+
+      /* Filas de cliente: una línea cada una */
+      .client-head, .client-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.1fr) minmax(0, 1.1fr) 56px;
+        gap: 6px;
+        align-items: center;
+      }
+      .client-head {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        padding: 0 1px 6px;
+      }
+      .client-head span:last-child { text-align: center; }
+      .client-row { margin-bottom: 8px; }
+      .client-row input, .client-row select {
+        font-size: 12.5px;
+        padding: 8px 5px;
+        min-height: 42px;
+        min-width: 0;
+      }
+      .client-row select { padding-right: 20px; background-position: calc(100% - 12px) 55%, calc(100% - 8px) 55%; }
+      .client-row input[type="text"] { text-align: left; }
+      .client-row input[type="number"] { padding: 8px 2px; }
+      .client-num {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+      }
+
+      .total-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--total-bg);
+        color: var(--total-ink);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        margin-bottom: 14px;
+      }
+      .total-bar .t-label { font-size: 15px; font-weight: 600; }
+      .total-bar .t-label small { display: block; font-size: 12px; font-weight: 400; opacity: 0.7; }
+      .total-bar .t-num { font-size: 34px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+
+      .send-btn {
+        width: 100%;
+        font: inherit;
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--accent-ink);
+        background: var(--accent);
+        border: none;
+        border-radius: var(--radius);
+        padding: 15px;
+        min-height: 54px;
+        cursor: pointer;
+      }
+      .send-btn:active { transform: scale(0.99); }
+      .send-btn[disabled] { opacity: 0.55; cursor: wait; }
+
+      .confirm {
+        display: none;
+        background: var(--ok-bg);
+        border: 1px solid var(--ok-line);
+        color: var(--ok-ink);
+        border-radius: var(--radius);
+        padding: 18px 16px;
+        margin-bottom: 14px;
+        text-align: center;
+      }
+      .confirm.show { display: block; }
+      .confirm .big { font-size: 20px; font-weight: 800; margin: 0 0 4px; }
+      .confirm p { margin: 0; font-size: 14px; }
+      .sending {
+        display: none;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+        padding: 6px 0 2px;
+      }
+      .sending.show { display: block; }
+      iframe.hidden-frame { display: none; width: 0; height: 0; border: 0; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>Reporte diario</h1>
+        <p class="sub">Equipo de postproducción · Eli Photography RD</p>
+      </header>
+
+      <div class="confirm" id="confirm" role="status">
+        <p class="big">✅ Reporte enviado</p>
+        <p>Tu reporte quedó registrado. Ya puedes llenar el siguiente.</p>
+      </div>
+
+      <form id="reportForm" method="POST" target="hidden_iframe"
+            action="https://docs.google.com/forms/d/e/1FAIpQLSf5eTpy4JroNpKFTn73-acht-ULapLb2rsHUpI5G0iLGZUKUQ/formResponse">
+
+        <div class="card">
+          <div class="grid-2">
+            <label class="field">
+              <span>¿Quién eres? <span class="req">*</span></span>
+              <select name="entry.1133633148" id="who" required aria-label="¿Quién eres?">
+                <option value="" selected disabled>Selecciona tu nombre</option>
+                <option>Alexander</option>
+                <option>Ashley</option>
+                <option>Diosa</option>
+                <option>Juseff</option>
+                <option>Luis</option>
+                <option>Mayuri</option>
+                <option>Melanie</option>
+                <option>Michel</option>
+                <option>Miguel</option>
+                <option>Wilfred</option>
+                <option>Winder</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Fecha del reporte <span class="req">*</span></span>
+              <input type="date" id="reportDate" required />
+            </label>
+          </div>
+          <input type="hidden" name="entry.349326515_year" id="dateYear" />
+          <input type="hidden" name="entry.349326515_month" id="dateMonth" />
+          <input type="hidden" name="entry.349326515_day" id="dateDay" />
+        </div>
+
+        <div class="card counts">
+          <h2>Conteos del día</h2>
+          <div class="grid-counts">
+            <label class="field">
+              <span>Sesiones en exterior</span>
+              <input type="number" name="entry.823186766" min="0" step="1" inputmode="numeric" placeholder="0" />
+            </label>
+            <label class="field">
+              <span>Sesiones de estudio</span>
+              <input type="number" name="entry.1744254774" min="0" step="1" inputmode="numeric" placeholder="0" />
+            </label>
+            <label class="field">
+              <span>Videos en exterior</span>
+              <input type="number" name="entry.1233988912" min="0" step="1" inputmode="numeric" placeholder="0" />
+            </label>
+            <label class="field">
+              <span>Videos en estudio</span>
+              <input type="number" name="entry.1880318455" min="0" step="1" inputmode="numeric" placeholder="0" />
+            </label>
+            <label class="field">
+              <span>Álbumes editados</span>
+              <input type="number" name="entry.333068437" min="0" step="1" inputmode="numeric" placeholder="0" />
+            </label>
+            <label class="field">
+              <span>Montajes</span>
+              <input type="number" name="entry.1763467116" min="0" step="1" inputmode="numeric" placeholder="0" />
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Clientes del día</h2>
+          <div class="client-head" aria-hidden="true">
+            <span>Cliente</span><span>Categoría</span><span>Tipo</span><span>Cant.</span>
+          </div>
+          <div id="clientRows"></div>
+        </div>
+
+        <div class="total-bar" aria-live="polite">
+          <div class="t-label">Total de fotos<small>Suma de las filas con tipo «Fotos»</small></div>
+          <div class="t-num" id="photoTotal">0</div>
+        </div>
+
+        <div class="card">
+          <label class="field">
+            <span>Notas u otros clientes</span>
+            <textarea name="entry.1614830850" placeholder="Algo más que quieras reportar…"></textarea>
+          </label>
+        </div>
+
+        <input type="hidden" name="fvv" value="1" />
+        <input type="hidden" name="pageHistory" value="0" />
+
+        <button type="submit" class="send-btn" id="sendBtn" name="submit" value="Submit">Enviar reporte</button>
+        <p class="sending" id="sending">Enviando…</p>
+      </form>
+
+      <iframe class="hidden-frame" name="hidden_iframe" id="hiddenIframe" title="Envío del reporte"></iframe>
+    </div>
+
+    <script>
+      (function () {
+        var CATEGORIES = ["Quinceaños", "Cumpleaños", "Casual", "Perfil profesional", "Newborn", "Boda", "Embarazada", "Set navideño", "Graduación", "Evento", "Bautizo", "Fotos 2x2", "Corporativas", "Empleados", "Productos", "Video"];
+        var TYPES = ["Fotos", "Sesiones en exterior", "Sesiones de estudio", "Videos en exterior", "Videos en estudio", "Álbumes", "Montajes"];
+        // IDs verificados de cada fila de cliente: [nombre, categoría, tipo, cantidad]
+        var ROW_IDS = [
+          ["entry.1736819661", "entry.1408907645", "entry.1584381424", "entry.323613482"],
+          ["entry.1881579024", "entry.766657907", "entry.1342827476", "entry.1375209646"],
+          ["entry.638156188", "entry.335524966", "entry.75596958", "entry.776428035"],
+          ["entry.248316064", "entry.977100824", "entry.1005155668", "entry.876308553"],
+          ["entry.85613387", "entry.616131031", "entry.1185441431", "entry.155429578"]
+        ];
+
+        function options(list, placeholder) {
+          var html = '<option value="" selected>' + placeholder + "</option>";
+          for (var i = 0; i < list.length; i++) html += "<option>" + list[i] + "</option>";
+          return html;
+        }
+
+        var rowsHtml = "";
+        for (var r = 0; r < ROW_IDS.length; r++) {
+          var ids = ROW_IDS[r];
+          rowsHtml +=
+            '<div class="client-row">' +
+              '<input type="text" name="' + ids[0] + '" placeholder="Nombre" autocomplete="off" aria-label="Nombre del cliente ' + (r + 1) + '" />' +
+              '<select name="' + ids[1] + '" class="cat-sel" aria-label="Categoría del cliente ' + (r + 1) + '">' + options(CATEGORIES, "Categoría") + "</select>" +
+              '<select name="' + ids[2] + '" class="type-sel" aria-label="Tipo de trabajo del cliente ' + (r + 1) + '">' + options(TYPES, "Tipo") + "</select>" +
+              '<input type="number" name="' + ids[3] + '" class="qty-in" min="0" step="1" inputmode="numeric" placeholder="0" aria-label="Cantidad del cliente ' + (r + 1) + '" />' +
+            "</div>";
+        }
+        document.getElementById("clientRows").innerHTML = rowsHtml;
+
+        var form = document.getElementById("reportForm");
+        var dateInput = document.getElementById("reportDate");
+        var totalEl = document.getElementById("photoTotal");
+        var confirmEl = document.getElementById("confirm");
+        var sendingEl = document.getElementById("sending");
+        var sendBtn = document.getElementById("sendBtn");
+        var iframe = document.getElementById("hiddenIframe");
+        var submitted = false;
+
+        function todayValue() {
+          var d = new Date();
+          var m = String(d.getMonth() + 1).padStart(2, "0");
+          var day = String(d.getDate()).padStart(2, "0");
+          return d.getFullYear() + "-" + m + "-" + day;
+        }
+        function setToday() { dateInput.value = todayValue(); }
+        setToday();
+
+        function splitDate() {
+          var parts = (dateInput.value || "").split("-");
+          if (parts.length === 3) {
+            document.getElementById("dateYear").value = parts[0];
+            document.getElementById("dateMonth").value = String(parseInt(parts[1], 10));
+            document.getElementById("dateDay").value = String(parseInt(parts[2], 10));
+          }
+        }
+
+        function updateTotal() {
+          var rows = form.querySelectorAll(".client-row");
+          var total = 0;
+          rows.forEach(function (row) {
+            var type = row.querySelector(".type-sel").value;
+            var qty = parseInt(row.querySelector(".qty-in").value, 10);
+            if (type === "Fotos" && !isNaN(qty)) total += qty;
+          });
+          totalEl.textContent = total;
+        }
+        form.addEventListener("input", updateTotal);
+        form.addEventListener("change", updateTotal);
+
+        form.addEventListener("submit", function () {
+          splitDate();
+          submitted = true;
+          confirmEl.classList.remove("show");
+          sendingEl.classList.add("show");
+          sendBtn.disabled = true;
+        });
+
+        iframe.addEventListener("load", function () {
+          if (!submitted) return; // carga inicial del iframe, sin envío
+          submitted = false;
+          sendingEl.classList.remove("show");
+          sendBtn.disabled = false;
+          form.reset();
+          setToday();
+          updateTotal();
+          confirmEl.classList.add("show");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      })();
+    </script>
+  </body>
+</html>
