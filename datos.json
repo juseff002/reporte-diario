@@ -1,0 +1,87 @@
+{
+ "actualizado": "2026-11-16T18:54:58-04:00",
+ "total_fotos": 84,
+ "total_reportes": 3,
+ "totales": {
+  "sesiones_exterior": 2,
+  "sesiones_estudio": 1,
+  "videos_exterior": 0,
+  "videos_estudio": 0,
+  "albumes": 0,
+  "montajes": 3
+ },
+ "por_persona": [
+  {
+   "nombre": "Juseff",
+   "fotos": 84,
+   "reportes": 3,
+   "sesiones": 3,
+   "videos": 0,
+   "albumes": 0,
+   "montajes": 3
+  }
+ ],
+ "por_categoria": [
+  {
+   "categoria": "Quinceaños",
+   "fotos": 64
+  },
+  {
+   "categoria": "Embarazada",
+   "fotos": 12
+  },
+  {
+   "categoria": "Cumpleaños",
+   "fotos": 8
+  }
+ ],
+ "por_dia": [
+  {
+   "fecha": "2026-11-16",
+   "fotos": 20
+  },
+  {
+   "fecha": "2026-11-13",
+   "fotos": 36
+  },
+  {
+   "fecha": "2026-11-12",
+   "fotos": 28
+  }
+ ],
+ "hoy": {
+  "fecha": "2026-11-16",
+  "reportaron": [
+   "Juseff"
+  ],
+  "faltan": [
+   "Alexander",
+   "Ashley",
+   "Diosa",
+   "Luis",
+   "Mayuri",
+   "Melanie",
+   "Michel",
+   "Miguel",
+   "Wilfred",
+   "Winder"
+  ]
+ },
+ "ultimos_reportes": [
+  {
+   "nombre": "Juseff",
+   "fecha": "2026-11-16",
+   "fotos": 20
+  },
+  {
+   "nombre": "Juseff",
+   "fecha": "2026-11-13",
+   "fotos": 36
+  },
+  {
+   "nombre": "Juseff",
+   "fecha": "2026-11-12",
+   "fotos": 28
+  }
+ ]
+}
