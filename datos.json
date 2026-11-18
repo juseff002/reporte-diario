@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-16T21:10:54-04:00",
+ "actualizado": "2026-11-17T21:10:55-04:00",
  "total_fotos": 84,
  "total_reportes": 3,
  "totales": {
@@ -50,15 +50,14 @@
   }
  ],
  "hoy": {
-  "fecha": "2026-11-16",
-  "reportaron": [
-   "Juseff"
-  ],
+  "fecha": "2026-11-17",
+  "reportaron": [],
   "faltan": [
    "Alexander",
    "Ashley",
    "Diosa",
    "Francis",
+   "Juseff",
    "Luis",
    "Mayuri",
    "Melanie",
